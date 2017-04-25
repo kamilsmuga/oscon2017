@@ -17,12 +17,11 @@ for the last 7 days of data
 * Argus - https://github.com/salesforce/Argus
 * D3 - https://github.com/d3/d3
 * Django - https://github.com/django/django
-* Docker / Moby - https://github.com/moby/moby
+* Moby - https://github.com/moby/moby
 * Elixir - https://github.com/elixir-lang/elixir
 * Elm - https://github.com/elm-lang/core
 * F# - https://github.com/fsharp/fsharp
 * Git - https://github.com/git/git
-* GNU Bash - https://git.savannah.gnu.org/git/bash.git
 * Go - https://github.com/golang/go
 * Graphql - https://github.com/graphql/graphql-js
 * HoloToolkit - https://github.com/Microsoft/HoloToolkit-Unity
