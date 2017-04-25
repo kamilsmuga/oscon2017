@@ -21,17 +21,15 @@ const program = require('commander');
 /**
  * List of projects should be passed as a JSON conf file.
  * @see ./oscon_projects.json
- * Username and password are optional but advised to use
- * if Github API limits for no auth are too restrictive.
+ * Token is optional but advised to use if Github API
+ * limits for unauthenticated are too restrictive.
  * @see https://developer.github.com/v3/#rate-limiting
  */
 program
   .arguments('<list_of_projects_file>')
-  .option('-u, --username <username>', 'The user to authenticate as')
-  .option('-p, --password <password>', 'The user\'s password')
+  .option('-t, --token <token>', 'OAuth2 Token')
   .action((file) => {
-    console.log(`user: ${program.username}
-      pass: ${program.password}
+    console.log(`token: ${program.token}
       file: ${file}`);
   })
   .parse(process.argv);

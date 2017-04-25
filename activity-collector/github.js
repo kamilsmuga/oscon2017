@@ -11,3 +11,8 @@
  */
 
 import GitHub from 'github-api';
+
+// basic auth
+var gh = new GitHub({
+  token: 'MY_OAUTH_TOKEN'
+});
