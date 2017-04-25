@@ -1,7 +1,7 @@
 # oscon2017
 Resources for the Raspberry PI + Sense HAT + refocus demo for OSCON 2017
 
-## List of major OSCON speaker's projects
+## List of open source projects OSCON '17 speakers talked about
 * Angular.js - https://github.com/angular/angular.js
 * Argus - https://github.com/salesforce/Argus
 * D3 - https://github.com/d3/d3
