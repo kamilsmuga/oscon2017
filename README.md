@@ -1,7 +1,18 @@
 # oscon2017
-Resources for the Raspberry PI + Sense HAT + refocus demo for OSCON 2017
+Resources for the [refocus](https://github.com/salesforce/refocus) and Raspberry Pi demo for OSCON 2017 [Monitoring @ Scale in Salesforce](https://conferences.oreilly.com/oscon/oscon-tx/public/schedule/detail/61450) talk
 
-## List of open source projects OSCON '17 speakers talked about
+The demo will visualize actvity levels of projects OSCON 2017 speakers will talk about. 'The formula' for the activity metric is:
+
+```
+for the last 7 days of data
+
+ACTIVITY = number of commits +
+number of new PRs +
+number of new issues +
+number of comments made on issues and PRs
+```
+
+### List of open source projects OSCON '17 speakers will talk about
 * Angular.js - https://github.com/angular/angular.js
 * Argus - https://github.com/salesforce/Argus
 * D3 - https://github.com/d3/d3
