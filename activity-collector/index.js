@@ -17,6 +17,9 @@
  */
 
 const program = require('commander');
+const utils = require('./utils.js');
+const github = require('./github.js');
+let gh, projects, auth = {}, activityPromises = [];
 
 /**
  * List of projects should be passed as a JSON conf file.
@@ -26,10 +29,31 @@ const program = require('commander');
  * @see https://developer.github.com/v3/#rate-limiting
  */
 program
-  .arguments('<list_of_projects_file>')
+  .option('-f, --file <projects>', 'File with projects')
   .option('-t, --token <token>', 'OAuth2 Token')
-  .action((file) => {
-    console.log(`token: ${program.token}
-      file: ${file}`);
-  })
   .parse(process.argv);
+
+// load projects from JSON
+projects = utils.loadProjects(program.file)
+
+// use token for auth if exists
+if (program.token) {
+  auth = { token: program.token };
+}
+
+// create new github object
+gh = new github(auth);
+
+// fetch & calculate activity for every project
+projects.map((project) => {
+  activityPromises.push(gh.fetchActivity(project));
+})
+
+// try to resolve fetching promises
+Promise.all(activityPromises)
+.then((results) => {
+  console.log('fetching done. results: ' + results);
+})
+.catch((err) => {
+  console.error(`Error while fetching. Err: ${err}`);
+});
