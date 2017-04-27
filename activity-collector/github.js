@@ -10,7 +10,7 @@
  * Module to access Github APIs
  */
 
-const gh = require('github-api');
+const gh = require('github');
 
 class Github {
     /**
@@ -19,8 +19,18 @@ class Github {
      *   not provided requests will be made unauthenticated
      */
     constructor(auth) {
-      this.__auth = auth || {};
-      this.__gh = new gh(this.__auth);
+      this.__auth = auth || null;
+      this.__gh = new gh();
+      this.authenticate();
+    }
+
+    authenticate() {
+      if (this.__auth.token) {
+        this.__gh.authenticate({
+          type: 'token',
+          token: this.__auth.token
+        });
+      }
     }
 
     /**
@@ -29,25 +39,17 @@ class Github {
      * @return {Promise} - the Promise for the http request
      */
     fetchActivity(project) {
-      let { user, repoName } = this.getUserAndRepoFromProjectUrl(project.url);
-      let repo = this.__gh.getRepo(user, repoName);
-      let noOfCommits;
-
-      this.getCommits(repo)
+      let theNumber;
+      const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
+      this.getStats(repoDetails)
       .then((result) => {
-        noOfCommits = result.commits;
-        console.log(`REPO: ${result.repo.__fullname} COMMITS: ${noOfCommits}`);
+        debugger;
+        theNumber = JSON.parse(result);
+        console.log(`REPO: ${result.repo.owner}/${result.repo.repo} Stats: ${theNumber}`);
       })
       .catch((err) => {
         console.error(err);
-      })
-      // repo.getDetails()
-      // .then((details) => {
-      //   debugger;
-      // })
-      // .catch((err) => {
-      //   console.error(err);
-      // })
+      });
     }
 
     /**
@@ -59,24 +61,16 @@ class Github {
       // example url https://github.com/salesforce/refocus
       const parts = url.split('/');
       return {
-        user: parts[parts.length - 2],
-        repoName : parts[parts.length - 1]
+        owner: parts[parts.length - 2],
+        repo : parts[parts.length - 1]
       };
     }
 
-    getCommits(repo) {
+    getStats(repo) {
       return new Promise((resolve, reject) => {
-        let since = new Date();
-        since.setDate(since.getDate() - 7);
-        let options = {};
-        options.since = since;
-        let url = `/repos/${repo.__fullname}/commits`;
-        //return this._request('GET', `/repos/${this.__fullname}/commits`, options)
-        return repo._requestAllPages('GET', `/repos/${repo.__fullname}/commits`, options)
-        //repo.listCommits({ since: since })
-        .then((details) => {
-          debugger;
-          resolve({ repo: repo, commits: details.data.length });
+        this.__gh.repos.getStatsCodeFrequency(repo)
+        .then((stats) => {
+          resolve({ repo: repo, stats: stats });
         })
         .catch((err) => {
           reject(err)

@@ -16,7 +16,7 @@
     "oscon17",
     "os-activity-collector"
   ],
-  "author": "Kamil Smuga <smugakamil@gmail.com>",
+  "author": "Kamil Smuga <kamil@salesforce.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kamilsmuga/oscon2017/issues"
@@ -24,6 +24,6 @@
   "homepage": "https://github.com/kamilsmuga/oscon2017#readme",
   "dependencies": {
     "commander": "2.9.0",
-    "github-api": "3.0.0"
+    "github": "^9.2.0"
   }
 }
