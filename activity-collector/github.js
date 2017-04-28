@@ -84,6 +84,7 @@ class Github {
         this.__gh.repos.getStatsCodeFrequency(repo)
         .then((stats) => {
           const lastWeekActivity = stats.data[stats.data.length - 1];
+          if (!lastWeekActivity) reject('error: no data returned by the Github API');
           // the value will be an aggregated adds and deletions
           const theNumber = lastWeekActivity[1] + Math.abs(lastWeekActivity[2]);
           resolve({ repo: repo, stats: theNumber });
