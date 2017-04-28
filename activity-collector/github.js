@@ -47,6 +47,7 @@ class Github {
         this.getStats(repoDetails)
         .then((result) => {
           resolve({
+            name: project.name,
             repo: `${result.repo.owner}/${result.repo.repo}`,
             stats: result.stats
           });

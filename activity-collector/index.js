@@ -19,7 +19,8 @@
 const program = require('commander');
 const utils = require('./utils.js');
 const github = require('./github.js');
-let gh, projects, auth = {}, activityPromises = [];
+const refocus = require('./refocus.js');
+let auth = {}, activityPromises = [], refocus_url = {};
 
 /**
  * List of projects should be passed as a JSON conf file.
@@ -30,19 +31,27 @@ let gh, projects, auth = {}, activityPromises = [];
  */
 program
   .option('-f, --file <projects>', 'File with projects')
-  .option('-t, --token <token>', 'OAuth2 Token')
+  .option('-t, --token <token>', 'Github OAuth2 Token')
+  .option('-r --refocus_url <refocus_url>', 'Refocus API url')
   .parse(process.argv);
 
 // load projects from JSON
-projects = utils.loadProjects(program.file)
+const projects = utils.loadProjects(program.file)
 
 // use token for auth if exists
 if (program.token) {
   auth = { token: program.token };
 }
 
+if (program.refocus_url) {
+  refocus_url = program.refocus_url;
+}
+
 // create new github object
-gh = new github(auth);
+const gh = new github(auth);
+
+//create new refocus object
+const r = new refocus(program.refocus_url);
 
 // fetch & calculate activity for every project
 projects.map((project) => {
@@ -53,9 +62,16 @@ projects.map((project) => {
 Promise.all(activityPromises)
 .then((results) => {
   console.log('fetching finished.');
-  console.log('results:');
+  console.log('fetching results:');
   results.map((result) => { console.log(result) });
+  // once fetching activity is finished
+  // its time to create samples in Refocus
+  return r.postSamples(results)
+})
+.then((refocusResults) => {
+  console.log('refocus loading finished.');
+  console.log(`refocus loading results: ${JSON.stringify(refocusResults)}`);
 })
 .catch((err) => {
-  console.error(`Error while fetching. Err: ${err}`);
+  console.error(`Error while executing requests. Details: ${err}`);
 });

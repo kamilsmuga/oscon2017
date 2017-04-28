@@ -24,6 +24,7 @@
   "homepage": "https://github.com/kamilsmuga/oscon2017#readme",
   "dependencies": {
     "commander": "2.9.0",
-    "github": "^9.2.0"
+    "github": "^9.2.0",
+    "superagent": "^3.5.2"
   }
 }
