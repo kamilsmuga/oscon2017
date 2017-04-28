@@ -4,12 +4,11 @@ Resources for the [refocus](https://github.com/salesforce/refocus) and Raspberry
 The demo will visualize actvity levels of projects OSCON 2017 speakers will talk about. 'The formula' for the activity metric is:
 
 ```
-ACTIVITY = number of commits +
-number of new PRs +
-number of new issues +
-number of comments made on issues and PRs
+ACTIVITY = number of additions + number of deletions
 
 for the last 7 days of data
+
+see: https://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week
 ```
 
 ### List of open source projects OSCON '17 speakers will talk about

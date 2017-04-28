@@ -52,7 +52,9 @@ projects.map((project) => {
 // try to resolve fetching promises
 Promise.all(activityPromises)
 .then((results) => {
-  console.log('fetching done. results: ' + results);
+  console.log('fetching finished.');
+  console.log('results:');
+  results.map((result) => { console.log(result) });
 })
 .catch((err) => {
   console.error(`Error while fetching. Err: ${err}`);

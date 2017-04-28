@@ -24,6 +24,9 @@ class Github {
       this.authenticate();
     }
 
+    /**
+     * Auth against Github if token exists
+     */
     authenticate() {
       if (this.__auth.token) {
         this.__gh.authenticate({
@@ -39,16 +42,19 @@ class Github {
      * @return {Promise} - the Promise for the http request
      */
     fetchActivity(project) {
-      let theNumber;
-      const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
-      this.getStats(repoDetails)
-      .then((result) => {
-        debugger;
-        theNumber = JSON.parse(result);
-        console.log(`REPO: ${result.repo.owner}/${result.repo.repo} Stats: ${theNumber}`);
-      })
-      .catch((err) => {
-        console.error(err);
+      return new Promise((resolve, reject) => {
+        const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
+        this.getStats(repoDetails)
+        .then((result) => {
+          const resultJSON = {
+            repo: `${result.repo.owner}/${result.repo.repo}`,
+            stats: result.stats
+          }
+          resolve(resultJSON);
+        })
+        .catch((err) => {
+          reject(err);
+        });
       });
     }
 
@@ -66,14 +72,25 @@ class Github {
       };
     }
 
+    /**
+     * Queries github for code stats frequency.
+     * Stats return a weekly aggregate of the number of additions and
+     * deletions pushed to a repository.
+     * @see https://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week
+     * @param {Object} [repo] - owner and repo name details
+     * @return {Promise} - the Promise for the http request
+     */
     getStats(repo) {
       return new Promise((resolve, reject) => {
         this.__gh.repos.getStatsCodeFrequency(repo)
         .then((stats) => {
-          resolve({ repo: repo, stats: stats });
+          const lastWeekActivity = stats.data[stats.data.length - 1];
+          // the value will be an aggregated adds and deletions
+          const theNumber = lastWeekActivity[1] + Math.abs(lastWeekActivity[2]);
+          resolve({ repo: repo, stats: theNumber });
         })
         .catch((err) => {
-          reject(err)
+          reject(err);
         })
       });
     }
