@@ -46,11 +46,10 @@ class Github {
         const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
         this.getStats(repoDetails)
         .then((result) => {
-          const resultJSON = {
+          resolve({
             repo: `${result.repo.owner}/${result.repo.repo}`,
             stats: result.stats
-          }
-          resolve(resultJSON);
+          });
         })
         .catch((err) => {
           reject(err);
