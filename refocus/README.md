@@ -8,3 +8,8 @@ curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POS
 3. Create child subjects for all projects talked about on OSCON 2017.
   * Edit ```load_subjects.sh``` and provide an URL to your Refocus as a value of the ```YOUR_REFOCUS_URL``` var.
   * Execute ```sh load_subjects.sh```
+4. Create activity aspect
+```
+curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -T aspect.json ${YOUR_REFOCUS_URL}/v1/aspects
+```
+5. Refocus is ready to take your samples!
