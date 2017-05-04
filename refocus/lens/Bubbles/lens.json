@@ -1,0 +1,8 @@
+{
+  "name": "Bubbles",
+  "description": "Lens that shows bubbles!",
+  "helpEmail": "kamil@salesforce.com",
+  "helpUrl": "https://github.com/kamilsmuga/oscon2017",
+  "license": "MIT",
+  "version": "0.0.1"
+}
