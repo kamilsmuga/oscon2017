@@ -1,0 +1,30 @@
+{
+  "name": "os-activity-collector",
+  "version": "1.0.0",
+  "description": "Open Source projects' activity collector. A concept presented as a demo for OSCON 2017 talk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamilsmuga/oscon2017.git"
+  },
+  "keywords": [
+    "oscon",
+    "oscon2017",
+    "oscon17",
+    "os-activity-collector"
+  ],
+  "author": "Kamil Smuga <kamil@salesforce.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kamilsmuga/oscon2017/issues"
+  },
+  "homepage": "https://github.com/kamilsmuga/oscon2017#readme",
+  "dependencies": {
+    "commander": "2.9.0",
+    "github": "^9.2.0",
+    "superagent": "^3.5.2"
+  }
+}

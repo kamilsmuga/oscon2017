@@ -1,9 +1,17 @@
 #!/usr/bin/python
 
+"""
+  Copyright (c) 2016, salesforce.com, inc.
+  All rights reserved.
+  Licensed under the BSD 3-Clause license.
+  For full license text, see LICENSE.txt file in the repo root or
+  https://opensource.org/licenses/BSD-3-Clause
+"""
+
 """Prints info from Sense Hat sensors.
 
-   Support: temperature, humidity, pressure 
-   TBD: IMU Sensor
+  Support: temperature, humidity, pressure 
+  TBD: IMU Sensor
 """
 
 from sense_hat import SenseHat
