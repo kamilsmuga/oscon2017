@@ -38,18 +38,36 @@ class Github {
 
     /**
      * Fetch and calculate activity for a particular project.
+     * Activity = weekly code additions and deletions +
+     *            comments on issues and PRs
      * @param {Object} [project] - object that represents a project
      * @return {Promise} - the Promise for the http request
      */
     fetchActivity(project) {
+      let repoStats, issueComments, prComments;
+      const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
+
       return new Promise((resolve, reject) => {
-        const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
-        this.getStats(repoDetails)
+        // fetch repo stats
+        this.getRepoStats(repoDetails)
         .then((result) => {
+          repoStats = result.stats;
+          // fetch a number of comments on issues
+          return this.getIssueComments(repoDetails)
+        })
+        .then((result) => {
+          issueComments = result.comments;
+          // fetch a number of comments on PRs
+          return this.getPRComments(repoDetails)
+        })
+        .then((result) => {
+          prComments = result.comments;
+          // sum everything up
+          const totalActivity = repoStats + issueComments + prComments;
           resolve({
             name: project.name,
             repo: `${result.repo.owner}/${result.repo.repo}`,
-            stats: result.stats
+            stats: totalActivity
           });
         })
         .catch((err) => {
@@ -80,15 +98,67 @@ class Github {
      * @param {Object} [repo] - owner and repo name details
      * @return {Promise} - the Promise for the http request
      */
-    getStats(repo) {
+    getRepoStats(repo) {
       return new Promise((resolve, reject) => {
         this.__gh.repos.getStatsCodeFrequency(repo)
         .then((stats) => {
           const lastWeekActivity = stats.data[stats.data.length - 1];
-          if (!lastWeekActivity) reject('error: no data returned by the Github API');
+          if (stats.meta.status == '202 Accepted') reject('Github is calculating stats. Try again later.');
           // the value will be an aggregated adds and deletions
           const theNumber = lastWeekActivity[1] + Math.abs(lastWeekActivity[2]);
           resolve({ repo: repo, stats: theNumber });
+        })
+        .catch((err) => {
+          reject(err);
+        })
+      });
+    }
+
+    /**
+     * Queries github for issue comments in a repository.
+     * @see https://developer.github.com/v3/issues/comments/#list-comments-in-a-repository
+     * @param {Object} [repo] - owner and repo name details
+     * @return {Promise} - the Promise for the http request
+     * TBD: Handle pagination. Right now results are capped at 100
+     */
+    getIssueComments(repo) {
+      return new Promise((resolve, reject) => {
+        let since = new Date();
+        since.setDate(since.getDate() - 7);
+        this.__gh.issues.getCommentsForRepo({
+          owner: repo.owner,
+          repo: repo.repo,
+          per_page: 100,
+          since: since
+        })
+        .then((stats) => {
+          resolve({ repo: repo, comments: stats.data.length });
+        })
+        .catch((err) => {
+          reject(err);
+        })
+      });
+    }
+
+    /**
+     * Queries github for PR comments in a repository.
+     * @see https://developer.github.com/v3/pulls/comments/#list-comments-in-a-repository
+     * @param {Object} [repo] - owner and repo name details
+     * @return {Promise} - the Promise for the http request
+     * TBD: Handle pagination. Right now results are capped at 100
+     */
+    getPRComments(repo) {
+      return new Promise((resolve, reject) => {
+        let since = new Date();
+        since.setDate(since.getDate() - 7);
+        this.__gh.pullRequests.getCommentsForRepo({
+          owner: repo.owner,
+          repo: repo.repo,
+          per_page: 100,
+          since: since
+        })
+        .then((stats) => {
+          resolve({ repo: repo, comments: stats.data.length });
         })
         .catch((err) => {
           reject(err);

@@ -4,9 +4,11 @@ Resources for the [refocus](https://github.com/salesforce/refocus) and Raspberry
 The demo will visualize actvity levels of projects OSCON 2017 speakers will talk about. 'The formula' for the activity metric is:
 
 ```
-ACTIVITY = number of additions + number of deletions
+ACTIVITY = sum of: lines of code additions + deletions
+    + number of comments on Issues
+    + number of comments on PRs
 
-for the last 7 days of data
+for the last 7 days
 
 see: https://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week
 ```

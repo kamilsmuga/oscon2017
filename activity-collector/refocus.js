@@ -38,7 +38,6 @@ class Refocus {
             value: entity.stats.toString()
           }
         });
-        debugger;
         // post samples to Refocus API
         request
           .post(`${this.__url}/v1/samples/upsert/bulk`)
