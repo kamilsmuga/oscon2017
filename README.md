@@ -11,6 +11,8 @@ ACTIVITY = sum of: lines of code additions + deletions
 for the last 7 days
 ```
 
+[LIVE DEMO](http://opensource-mon.herokuapp.com/perspectives/bubbles-perspective)
+
 ### List of open source projects OSCON '17 speakers will talk about
 * Angular.js - https://github.com/angular/angular.js
 * Argus - https://github.com/salesforce/Argus
