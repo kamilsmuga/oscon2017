@@ -20,7 +20,6 @@ class Refocus {
     constructor(url) {
       this.__url = url || null;
       this.__root = 'OSCON2017';
-      this.__aspect = 'Activity';
     }
 
     /**
@@ -34,7 +33,7 @@ class Refocus {
         // create Refocus compatible sample objects
         const samples = data.map((entity) => {
           return {
-            name: `${this.__root}.${entity.name}|${this.__aspect}`,
+            name: `${this.__root}.${entity.name}|${entity.aspect}`,
             value: entity.stats.toString()
           }
         });

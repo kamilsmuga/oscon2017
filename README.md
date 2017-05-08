@@ -9,8 +9,6 @@ ACTIVITY = sum of: lines of code additions + deletions
     + number of comments on PRs
 
 for the last 7 days
-
-see: https://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week
 ```
 
 ### List of open source projects OSCON '17 speakers will talk about

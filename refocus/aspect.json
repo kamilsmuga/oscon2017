@@ -1,8 +1,34 @@
-{
-  "isPublished": true,
-  "name": "Activity",
-  "criticalRange": [0, 0],
-  "okRange": [1, 1000000000000000],
-  "timeout": "1d",
-  "valueType": "NUMERIC"
-}
+[
+  {
+    "isPublished": true,
+    "name": "Activity",
+    "criticalRange": [0, 0],
+    "okRange": [1, 1000000000000000],
+    "timeout": "1d",
+    "valueType": "NUMERIC"
+  },
+  {
+    "isPublished": true,
+    "name": "LOC",
+    "criticalRange": [0, 0],
+    "okRange": [1, 1000000000000000],
+    "timeout": "1d",
+    "valueType": "NUMERIC"
+  },
+  {
+    "isPublished": true,
+    "name": "IssueComments",
+    "criticalRange": [0, 0],
+    "okRange": [1, 1000000000000000],
+    "timeout": "1d",
+    "valueType": "NUMERIC"
+  },
+  {
+    "isPublished": true,
+    "name": "PRComments",
+    "criticalRange": [0, 0],
+    "okRange": [1, 1000000000000000],
+    "timeout": "1d",
+    "valueType": "NUMERIC"
+  }
+]

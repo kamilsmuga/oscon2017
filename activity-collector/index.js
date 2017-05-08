@@ -20,7 +20,7 @@ const program = require('commander');
 const utils = require('./utils.js');
 const github = require('./github.js');
 const refocus = require('./refocus.js');
-let auth = {}, activityPromises = [], refocus_url = {};
+let auth = {}, refocus_url = {};
 
 /**
  * List of projects should be passed as a JSON conf file.
@@ -53,24 +53,91 @@ const gh = new github(auth);
 //create new refocus object
 const r = new refocus(program.refocus_url);
 
-// fetch & calculate activity for every project
-projects.map((project) => {
-  activityPromises.push(gh.fetchActivity(project));
-})
+/**
+ * STEP 1: Calculate general activity by summing up
+ * lines of code, comments on Issues and PRs
+ * and push to 'Activity' aspect
+ */
 
-// try to resolve fetching promises
-Promise.all(activityPromises)
+// fetch & calculate activity for every project
+Promise.all(projects.map(project => gh.fetchActivity(project)))
 .then((results) => {
-  console.log('fetching finished.');
-  console.log('fetching results:');
+  console.log('General Activity fetching finished.');
+  console.log('General Activity fetching results:');
   results.map((result) => { console.log(result) });
   // once fetching activity is finished
   // its time to create samples in Refocus
   return r.postSamples(results)
 })
 .then((refocusResults) => {
-  console.log('refocus loading finished.');
-  console.log(`refocus loading results: ${JSON.stringify(refocusResults)}`);
+  console.log('General Activity loading to Refocus finished.');
+  console.log(`General Activity loading to Refocus results: ${JSON.stringify(refocusResults)}`);
+})
+.catch((err) => {
+  console.error(`Error while executing requests. Details: ${err}`);
+});
+
+/**
+ * STEP 2: Calculate LOC activity only
+ * and push to 'LOC' aspect
+ */
+
+Promise.all(projects.map(project => gh.getRepoStats(project)))
+.then((results) => {
+  console.log('Repo Stats fetching finished.');
+  console.log('Repo Stats fetching results:');
+  results.map((result) => { console.log(result) });
+  // once fetching activity is finished
+  // its time to create samples in Refocus
+  return r.postSamples(results)
+})
+.then((refocusResults) => {
+  console.log('Repo Stats loading to Refocus finished.');
+  console.log(`Repo Stats loading to Refocus results: ${JSON.stringify(refocusResults)}`);
+})
+.catch((err) => {
+  console.error(`Error while executing requests. Details: ${err}`);
+});
+
+/**
+ * STEP 3: Calculate comments on Issues activity only
+ * and push to 'IssueComments' aspect
+ */
+
+Promise.all(projects.map(project => gh.getIssueComments(project)))
+.then((results) => {
+  console.log('Issue Comments fetching finished.');
+  console.log('Issue Comments fetching results:');
+  results.map((result) => { console.log(result) });
+  // once fetching activity is finished
+  // its time to create samples in Refocus
+  return r.postSamples(results)
+})
+.then((refocusResults) => {
+  console.log('Issue Comments loading to Refocus finished.');
+  console.log(`Issue Comments loading to Refocus results: ${JSON.stringify(refocusResults)}`);
+})
+.catch((err) => {
+  console.error(`Error while executing requests. Details: ${err}`);
+});
+
+ /**
+  * STEP 4: Calculate comments on PRs activity only
+  * and push to 'PRComments' aspect
+  */
+
+Promise.all(projects.map(project => gh.getPRComments(project)))
+.then((results) => {
+  console.log('PR Comments fetching finished.');
+  console.log('PR Comments fetching results:');
+  results.map((result) => { console.log(result) });
+  // once fetching activity is finished
+  // its time to create samples in Refocus
+  return r.postSamples(results)
+})
+.then((refocusResults) => {
+  console.log('PR Comments loading to Refocus finished.');
+  console.log(`PR Comments loading to Refocus results: ${JSON.stringify(refocusResults)}`);
 })
 .catch((err) => {
   console.error(`Error while executing requests. Details: ${err}`);

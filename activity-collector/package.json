@@ -17,7 +17,7 @@
     "os-activity-collector"
   ],
   "author": "Kamil Smuga <kamil@salesforce.com>",
-  "license": "MIT",
+  "license": "BSD 3-clause \"New\" or \"Revised\" License",
   "bugs": {
     "url": "https://github.com/kamilsmuga/oscon2017/issues"
   },

@@ -45,29 +45,29 @@ class Github {
      */
     fetchActivity(project) {
       let repoStats, issueComments, prComments;
-      const repoDetails = this.getUserAndRepoFromProjectUrl(project.url);
 
       return new Promise((resolve, reject) => {
         // fetch repo stats
-        this.getRepoStats(repoDetails)
+        this.getRepoStats(project)
         .then((result) => {
           repoStats = result.stats;
           // fetch a number of comments on issues
-          return this.getIssueComments(repoDetails)
+          return this.getIssueComments(project)
         })
         .then((result) => {
-          issueComments = result.comments;
+          issueComments = result.stats;
           // fetch a number of comments on PRs
-          return this.getPRComments(repoDetails)
+          return this.getPRComments(project)
         })
         .then((result) => {
-          prComments = result.comments;
+          prComments = result.stats;
           // sum everything up
           const totalActivity = repoStats + issueComments + prComments;
           resolve({
             name: project.name,
             repo: `${result.repo.owner}/${result.repo.repo}`,
-            stats: totalActivity
+            stats: totalActivity,
+            aspect: 'Activity'
           });
         })
         .catch((err) => {
@@ -98,7 +98,8 @@ class Github {
      * @param {Object} [repo] - owner and repo name details
      * @return {Promise} - the Promise for the http request
      */
-    getRepoStats(repo) {
+    getRepoStats(project) {
+      const repo = this.getUserAndRepoFromProjectUrl(project.url);
       return new Promise((resolve, reject) => {
         this.__gh.repos.getStatsCodeFrequency(repo)
         .then((stats) => {
@@ -106,7 +107,12 @@ class Github {
           if (stats.meta.status == '202 Accepted') reject('Github is calculating stats. Try again later.');
           // the value will be an aggregated adds and deletions
           const theNumber = lastWeekActivity[1] + Math.abs(lastWeekActivity[2]);
-          resolve({ repo: repo, stats: theNumber });
+          resolve({
+            name: project.name,
+            repo: repo,
+            stats: theNumber,
+            aspect: 'LOC'
+          });
         })
         .catch((err) => {
           reject(err);
@@ -121,7 +127,8 @@ class Github {
      * @return {Promise} - the Promise for the http request
      * TBD: Handle pagination. Right now results are capped at 100
      */
-    getIssueComments(repo) {
+    getIssueComments(project) {
+      const repo = this.getUserAndRepoFromProjectUrl(project.url);
       return new Promise((resolve, reject) => {
         let since = new Date();
         since.setDate(since.getDate() - 7);
@@ -132,7 +139,12 @@ class Github {
           since: since
         })
         .then((stats) => {
-          resolve({ repo: repo, comments: stats.data.length });
+          resolve({
+            name: project.name,
+            repo: repo,
+            stats: stats.data.length,
+            aspect: 'IssueComments'
+            });
         })
         .catch((err) => {
           reject(err);
@@ -147,7 +159,8 @@ class Github {
      * @return {Promise} - the Promise for the http request
      * TBD: Handle pagination. Right now results are capped at 100
      */
-    getPRComments(repo) {
+    getPRComments(project) {
+      const repo = this.getUserAndRepoFromProjectUrl(project.url);
       return new Promise((resolve, reject) => {
         let since = new Date();
         since.setDate(since.getDate() - 7);
@@ -158,7 +171,12 @@ class Github {
           since: since
         })
         .then((stats) => {
-          resolve({ repo: repo, comments: stats.data.length });
+          resolve({
+            name: project.name,
+            repo: repo,
+            stats: stats.data.length,
+            aspect: 'PRComments'
+          });
         })
         .catch((err) => {
           reject(err);
