@@ -96,12 +96,19 @@ function drawBubbles(hierarchy) {
     var classes = [];
 
     function recurse(name, node) {
-      if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
+      if (node.children) {
+        node.children.forEach(function(child) {
+          if (child.samples && child.samples.filter(s => s.aspect.name == 'Activity')) {
+            recurse(node.name, child);
+          }
+        });
+      }
       else {
+        const activitySample = node.samples.filter(s => s.name.substring('Activity'))[0];
         classes.push({
           packageName: name,
           className: node.name,
-          value: (node.samples.length > 0) ? node.samples[0].value : 0
+          value: activitySample.value
         });
       }
     }
@@ -229,7 +236,7 @@ function setBubbleListeners(hierarchy) {
   bubbles.forEach((bubble) => {
     bubble.addEventListener('click', (evt) => {
       const sample = hierarchy.children.filter(o => o.name === evt.target.id)[0];
-
+      let activitySample = sample.samples.filter(s => s.aspect.name == 'Activity')[0];
       const conf = {
         close: {
           label: "Close"
@@ -242,9 +249,11 @@ function setBubbleListeners(hierarchy) {
           value: "Activity Value"
         }
       };
-      sample.value = (sample.samples.length > 0) ? sample.samples[0].value : 0
+      // there's probably a better way to inherit related links
+      // from a subject
+      activitySample.relatedLinks = sample.relatedLinks;
       bindContentToModal(sampleModal, template.sampleModal,
-        conf, sample);
+        conf, activitySample);
       $('#modal-bubble').modal(); // open the modal
     });
   });

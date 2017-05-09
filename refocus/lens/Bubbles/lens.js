@@ -92,6 +92,9 @@
 	  LENS.insertAdjacentHTML('beforeend', '<div id="modal-bubble" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true">');
 	  sampleModal = document.getElementById('modal-bubble');
 
+	  // ugly injection of googly analytics
+	  LENS.insertAdjacentHTML('beforeend', "<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-98731868-1', 'auto');ga('send', 'pageview');</script>");
+
 	  // bubbles
 	  drawBubbles(hierarchy);
 	  setBubbleListeners(hierarchy);
@@ -146,12 +149,19 @@
 	    var classes = [];
 
 	    function recurse(name, node) {
-	      if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
+	      if (node.children) {
+	        node.children.forEach(function(child) {
+	          if (child.samples && child.samples.filter(s => s.aspect.name == 'Activity')) {
+	            recurse(node.name, child);
+	          }
+	        });
+	      }
 	      else {
+	        const activitySample = node.samples.filter(s => s.name.substring('Activity'))[0];
 	        classes.push({
 	          packageName: name,
 	          className: node.name,
-	          value: (node.samples.length > 0) ? node.samples[0].value : 0
+	          value: activitySample.value
 	        });
 	      }
 	    }
@@ -279,7 +289,7 @@
 	  bubbles.forEach((bubble) => {
 	    bubble.addEventListener('click', (evt) => {
 	      const sample = hierarchy.children.filter(o => o.name === evt.target.id)[0];
-
+	      let activitySample = sample.samples.filter(s => s.aspect.name == 'Activity')[0];
 	      const conf = {
 	        close: {
 	          label: "Close"
@@ -292,9 +302,11 @@
 	          value: "Activity Value"
 	        }
 	      };
-	      sample.value = (sample.samples.length > 0) ? sample.samples[0].value : 0
+	      // there's probably a better way to inherit related links
+	      // from a subject
+	      activitySample.relatedLinks = sample.relatedLinks;
 	      bindContentToModal(sampleModal, template.sampleModal,
-	        conf, sample);
+	        conf, activitySample);
 	      $('#modal-bubble').modal(); // open the modal
 	    });
 	  });
@@ -397,7 +409,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, "#pageHeader {\n  margin-top: 2rem;\n}", ""]);
 
 	// exports
 
@@ -2031,7 +2043,7 @@
 
 	var Handlebars = __webpack_require__(16);
 	module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    return "<h1 id=\"pageHeader\">OSCON 2017 DEMO</div>";
+	    return "<h1 id=\"pageHeader\">\n  <a href=\"https://github.com/kamilsmuga/oscon2017#oscon2017\">BUBBLES LENS - OSCON 2017 DEMO</a>\n</h1>";
 	},"useData":true});
 
 /***/ }),
