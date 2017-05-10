@@ -74,7 +74,7 @@ Promise.all(projects.map(project => gh.fetchActivity(project)))
   console.log(`General Activity loading to Refocus results: ${JSON.stringify(refocusResults)}`);
 })
 .catch((err) => {
-  console.error(`Error while executing requests. Details: ${err}`);
+  console.error(`Error while executing General Activity requests. Details: ${err}`);
 });
 
 /**
@@ -96,7 +96,8 @@ Promise.all(projects.map(project => gh.getRepoStats(project)))
   console.log(`Repo Stats loading to Refocus results: ${JSON.stringify(refocusResults)}`);
 })
 .catch((err) => {
-  console.error(`Error while executing requests. Details: ${err}`);
+  debugger;
+  console.error(`Error while executing Repo Stats requests. Details: ${err}`);
 });
 
 /**
@@ -118,7 +119,7 @@ Promise.all(projects.map(project => gh.getIssueComments(project)))
   console.log(`Issue Comments loading to Refocus results: ${JSON.stringify(refocusResults)}`);
 })
 .catch((err) => {
-  console.error(`Error while executing requests. Details: ${err}`);
+  console.error(`Error while executing Issue Comments requests. Details: ${err}`);
 });
 
  /**
@@ -140,5 +141,5 @@ Promise.all(projects.map(project => gh.getPRComments(project)))
   console.log(`PR Comments loading to Refocus results: ${JSON.stringify(refocusResults)}`);
 })
 .catch((err) => {
-  console.error(`Error while executing requests. Details: ${err}`);
+  console.error(`Error while executing PR Comments requests. Details: ${err}`);
 });

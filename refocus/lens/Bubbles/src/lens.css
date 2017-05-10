@@ -1,3 +1,15 @@
 #pageHeader {
   margin-top: 2rem;
 }
+
+svg {
+  max-height: 960px;
+
+  margin: 0 auto; /* poor attempt at centering */
+
+  height: auto !important; /* overrides inline */
+  width: auto !important; /* overrides inline */
+
+  max-width: 960px;
+  display: block;
+}

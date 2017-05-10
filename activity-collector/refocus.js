@@ -34,7 +34,8 @@ class Refocus {
         const samples = data.map((entity) => {
           return {
             name: `${this.__root}.${entity.name}|${entity.aspect}`,
-            value: entity.stats.toString()
+            value: entity.stats.toString(),
+            messageCode: entity.stats.toString()
           }
         });
         // post samples to Refocus API
